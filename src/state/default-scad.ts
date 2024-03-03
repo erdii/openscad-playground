@@ -1,5 +1,3 @@
-// Portions of this file are Copyright 2021 Google LLC, and licensed under GPL2+. See COPYING.
-
 export default `
 height = 4;
 bar_thickness = 3;
@@ -14,7 +12,7 @@ distance = total_length - (diameter + 2 * bar_thickness);
 
 use <custom/arcs.scad>
 
-translate([radius+bar_thickness, 0, 0])
+translate([radius+bar_thickness, radius + bar_thickness, 0])
 linear_extrude(height)
 union() {
     radiusInner = radius;
@@ -24,18 +22,27 @@ union() {
     a = radius + bar_thickness/2;
     c = distance/2;
     alpha = asin(a/c); // rotation angle to line between circle centers
-    b = c * cos(alpha); // half length of tangent
+    b = c * cos(alpha); // half length of tangent       
     beta = 90 - alpha;
     
-    rotate([0,0,-beta])
-    arc(-hook_angle, radiusInner, radiusOuter);
-
-    translate([distance, 0, 0])
-        rotate([0, 0, 90+alpha])
-        arc(-hook_angle, radiusInner, radiusOuter);
-
-    translate([distance/2, 0, 0])
-        rotate([0, 0, 90 + alpha])
-            square([bar_thickness, b*2], center = true);
+    for(i = [0, 1]) {
+        translate([i * distance, 0, 0])
+        rotate([0,0, i * 180])
+        union() {
+            rotate([0, 0, -beta]) {
+                // hook
+                arc(-hook_angle, radiusInner, radiusOuter);
+                // tip
+                rotate([0, 0, -hook_angle])
+                translate([a, 0, 0])
+                    circle(bar_thickness/2);
+            }
+            
+            // half tangent
+            rotate([0, 0, 90 + alpha])
+            translate([-a, -(b/2), 0])
+                square([bar_thickness, b], center = true);
+        }
+    }
 }
-`
+`;
