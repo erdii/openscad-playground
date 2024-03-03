@@ -29,7 +29,8 @@ public: \
 		public/libraries/Stemfie_OpenSCAD.zip \
 		public/libraries/pathbuilder.zip \
 		public/libraries/openscad_attachable_text3d.zip \
-		public/libraries/UB.scad.zip
+		public/libraries/UB.scad.zip \
+		public/libraries/custom.zip
 
 clean:
 	rm -fR libs build
@@ -69,6 +70,14 @@ libs/liberation:
 
 libs/openscad:
 	git clone https://github.com/openscad/openscad.git ${SHALLOW} ${SINGLE_BRANCH} $@
+
+libs/custom:
+	mkdir -p libs/custom
+	cp custom_libs/*.scad $@
+
+public/libraries/custom.zip: libs/custom
+	mkdir -p public/libraries
+	( cd libs/custom ; zip -r ../../public/libraries/custom.zip *.scad )
 
 public/libraries/openscad.zip: libs/openscad
 	mkdir -p public/libraries

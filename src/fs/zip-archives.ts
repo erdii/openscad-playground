@@ -169,6 +169,14 @@ export const zipArchives: ZipArchives = {
       include: [{glob: ['**/*.scad', 'LICENSE']}],
     },
   },
+  'custom': {
+    description: 'Miscellaneous stuff',
+    gitOrigin: {
+      branch: 'main',
+      repoUrl: 'https://github.com/erdii/openscad-playground',
+      include: [{glob: ['*.scad']}],
+    },
+  },
 };
 
 export const deployedArchiveNames =
